@@ -1,0 +1,17 @@
+{
+  "name": "notebook",
+  "version": "1.0.0",
+  "description": "A lightweight note taking application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anthony Lekan",
+  "license": "ISC",
+  "dependencies": {
+    "bower": "^1.8.2",
+    "electron": "^1.7.10",
+    "electron-default-menu": "^1.0.1"
+  }
+}
