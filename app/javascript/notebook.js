@@ -10,15 +10,16 @@ var properties = function(id, isOpened, name, text) {
     this.text = text;
 };
 
+// Switch from index.html to notebook.html
+// & Load new notebook with data
 function loadNotebook(name) {
 
 }
 
-// Checks if current path exists and loops until newID is found
-function getNewID(path) {}
-function doesExist(path) {
+// Returns a list of all available notebooks
+function getNotebooks() {}
 
-}
+
 
 
 
