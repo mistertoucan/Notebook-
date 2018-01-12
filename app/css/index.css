@@ -1,21 +1,41 @@
 /* Copyright (c) 2017 Anthony Lekan */
 
-#content {
-    text-align: center;
-    width: 100%;
-}
+.color-primary-0 { background-color: #94B762 }	/* Main Primary color */
+.color-primary-1 { background-color: #82DB00 }
+.color-primary-2 { background-color: #7ED500 }
+.color-primary-3 { background-color: #A1AB93 }
+.color-primary-4 { background-color: #A0A894 }
 
-#notebookInput {
-    width: 25%;
+#selectNotebook {
+    display: inline;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 25%;
+    opacity: 0.7;
 }
 
 #navbar {
     width: 100%;
-    height: 10%;
-    background
-
+    height: 15%;
+    opacity: 0.5;
 }
 
 #toolbar {
     display: inline;
+}
+
+#sideBar {
+    float: left;
+    width: 15%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    opacity: 1.2;
+}
+
+#editorWindow {
+
 }
