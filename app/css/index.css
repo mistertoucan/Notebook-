@@ -1,1 +1,11 @@
 /* Copyright (c) 2017 Anthony Lekan */
+
+#content {
+    text-align: center;
+    width: 100%;
+}
+
+#notebookInput {
+    width: 25%;
+}
+

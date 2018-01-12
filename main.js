@@ -10,17 +10,17 @@ let win;
 function createWindow() {
 	win = new BrowserWindow({width: 800, height: 600});
 	win.loadURL(url.format({
-    	pathname: path.join(__dirname, './app/index.html'),
+    	pathname: path.join(__dirname, './app/notebook.html'),
     	protocol: 'file:',
     	slashes: true
     }));
 
-	require('./app/javascript/menu.js')
+	win.webContents.openDevTools();
+
+	win.on('closed', () => {
+	    win = null;
+	    app.exit();
+    });
 }
 
 app.on('ready', createWindow);
-
-app.on('closed', function() {
-	win = null;
-	app.exit();
-});
