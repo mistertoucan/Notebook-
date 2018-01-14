@@ -1,18 +1,37 @@
 /* Copyright (c) 2017 Anthony Lekan */
-$ = require('jquery');
+var $ = require('jquery');
+var notebook = require('./javascript/notebook.js');
+
 
 $(document).ready(function() {
-    console.log("HELLO!");
 
-    $('#selectNotebook').removeClass('hidden');
 
 });
 
-// Creates a datalist with Id 'notebookList'
-function addLoadedNotebooks() {
+function addToolBarOptions() {
+    for(var i = 12; i <= 36; i+= 2) {
+        $('#fontSizeTool').append('<option value=' + i + ">" + i + '</option>');
+    }
+    $('#fontSizeTool').val(14);
+}
+
+function createNote() {
 
 }
 
-$('body').on('click', function() {
-    console.log("HELLO!");
-});
+function selectNotebook() {
+    if(notebook.getLastNotebook() != null) {
+        openNotebook(notebook.getLastNotebook());
+        return;
+    }
+
+    notebook.getNotebooks().forEach(function(name) {
+       $('#selectNotebook').append(name);
+    });
+
+    $('#selectNotebook').removeClass('hidden');
+}
+
+function openNotebook() {
+
+}

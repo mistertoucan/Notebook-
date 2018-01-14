@@ -6,24 +6,44 @@
 .color-primary-3 { background-color: #A1AB93 }
 .color-primary-4 { background-color: #A0A894 }
 
+body {
+    overflow: hidden;
+    font-size: 14px;
+    font-family: 'Courier';
+}
+
+#page {
+    width: 100%;
+    height: 100%;
+}
+
 #selectNotebook {
     display: inline;
     position: relative;
     top: 0px;
     left: 0px;
     width: 100%;
-    height: 25%;
+    height: 100%;
     opacity: 0.7;
+
 }
 
 #navbar {
     width: 100%;
-    height: 15%;
+    height: 20%;
     opacity: 0.5;
+    margin-left: 15%;
 }
 
 #toolbar {
-    display: inline;
+    display: inline-block;
+    list-style-type: none;
+    text-align: center;
+}
+
+#toolbar li {
+    float: left;
+    margin: 0 10px 0 10px;
 }
 
 #sideBar {
@@ -34,8 +54,27 @@
     left: 0px;
     top: 0px;
     opacity: 1.2;
+    overflow: scroll;
 }
 
 #editorWindow {
+    float: right;
+    height: 100%;
+    width: 82%;
+    position: absolute;
+    margin-left: 18%;
+}
 
+#noteContent {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: none;
+    overflow: auto;
+    -webkit-appearance: textarea;
+    position: relative;
+}
+
+#noteContent:focus {
+    outline: none;
 }
