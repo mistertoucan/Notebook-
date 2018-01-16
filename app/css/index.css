@@ -29,10 +29,12 @@ body {
 }
 
 #navbar {
-    width: 100%;
-    height: 20%;
+    width: 85%;
+    float: right;
+    height: 5%;
     opacity: 0.5;
     margin-left: 15%;
+    position: absolute;
 }
 
 #toolbar {
@@ -59,22 +61,44 @@ body {
 
 #editorWindow {
     float: right;
-    height: 100%;
+    margin-top: 5%;
+    height: 95%;
     width: 82%;
-    position: absolute;
     margin-left: 18%;
+    position: absolute;
 }
 
-#noteContent {
-    width: 100%;
+#note {
     height: 100%;
+}
+
+#noteEditor {
+    max-height: 99%;
     resize: none;
     border: none;
-    overflow: auto;
-    -webkit-appearance: textarea;
+    overflow-y: scroll;
     position: relative;
+    height: 90%;
 }
 
-#noteContent:focus {
+#noteEditor:focus {
     outline: none;
+}
+
+.brand {
+    height: 5%;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5em;
+    position: absolute;
+}
+
+#createFormWrapper {
+    float: left;
+    width: 100%;
+    height: 100%;
+}
+
+.warning {
+    border: 2px solid red;
 }

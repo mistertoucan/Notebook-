@@ -22,22 +22,31 @@
     </div>
 
     <div id="editorWindow">
-        <div class="container">
+        <div class="container" style="height: 100%;">
             <div id="selectNotebook" class="hidden">
+                <div id="createNotebook" class="hidden">
+                    <div id="createFormWrapper" class="form-group">
+                        <label for="createNotebookName">Name:</label>
+                        <input type="string" class="form-control" id="createNotebookName" style="width: 65%;"/>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 25px;" onclick="createNotebook();">Create</button>
+                    </div>
+                </div>
             </div>
             <div id="note">
                 <div id="noteInfo">
                     <p>Created 01/01/10</p>
                 </div>
-                <div id="noteEditor">
+                <div id="noteEditor" contenteditable="true">
                 </div>
             </div>
         </div>
     </div>
 
     <div id="sideBar" class="color-primary-4">
+        <div class="brand">
+            <p id="notebookName">Notebook</p>
+        </div>
         <ul id="files">
-
 
         </ul>
     </div>

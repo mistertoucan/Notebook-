@@ -8,7 +8,7 @@ const path = require('path');
 let win;
 
 function createWindow() {
-	win = new BrowserWindow({width: 800, height: 600});
+	win = new BrowserWindow({width: 800, height: 600, 'minWidth': 450, 'minHeight': 650});
 	win.loadURL(url.format({
     	pathname: path.join(__dirname, './app/notebook.html'),
     	protocol: 'file:',

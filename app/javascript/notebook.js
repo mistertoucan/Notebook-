@@ -1,11 +1,29 @@
 /* Copyright (c) 2017 Anthony Lekan */
-var electron = require('electron');
+var settings = require('./settings.js');
+var path = require('path');
+var Datastore = require('nedb');
 
+var $ = require('jquery');;
 
-// Switch from index.html to notebook.html
-// & Load new notebook with data
-function loadNotebook(notebookID) {
+let notebooks = new Datastore({
+    filename: path.join(settings.homePath, 'notebooks.db'),
+    timestampData: true,
+    autoload: true
+});
 
+var notebook = function(name, dateCreated, categories, notes) {
+  return {};
+};
+
+function addNotebook(notebook) {
+
+}
+
+function loadNotebook(notebook) {
+    if(!$.inArray(notebook, getNotebooks())) {
+        return 200;
+    }
+    return 'A notebook with this name already exists!';
 }
 
 // Returns last opened notebook
@@ -15,7 +33,7 @@ function getLastNotebook() {
 
 // Returns a list of all available notebooks names
 function getNotebooks() {
-    return ['hello', 'my', 'name', 'is', 'jeff'];
+    return [];
 }
 
 module.exports.getNotebooks = getNotebooks;
