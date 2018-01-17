@@ -5,37 +5,74 @@ var Datastore = require('nedb');
 
 var $ = require('jquery');;
 
-let notebooks = new Datastore({
+var notebooks = [];
+
+let notebookDB = new Datastore({
     filename: path.join(settings.homePath, 'notebooks.db'),
     timestampData: true,
-    autoload: true
+    autoload: false
 });
 
-var notebook = function(name, dateCreated, categories, notes) {
-  return {};
+notebookDB.loadDatabase(function(err) {
+    notebookDB.selectAll().forEach(function(notebook) {
+       notebooks.append(notebook);
+    });
+    var found = false;
+    notebooks.forEach(function(notebook) {
+       if(notebook.name == settings.globalProperties.lastOpened) {
+           found = true;
+           return;
+       }
+    });
+    if(!found) {
+        settings.globalProperties.lastOpened = null;
+    }
+});
+
+var Notebook = function(name, dateCreated, categories) {
+  this.name = name;
+  this.dateCreated = dateCreated;
+  this.categories = categories;
 };
 
-function addNotebook(notebook) {
-
+// Return Codes:
+// 200: All good created!
+// 300: Notebook With Name Already Exists
+// 400: Db Problem
+function addNotebook(notebookName) {
+    if(notebookDB.find({name: notebookName}, function(err, docs) {
+        if(docs.length > 0) {
+            return 300;
+        }
+    }));
+    newNotebook = new Notebook(notebookName, new Date(), {});
+    notebookDB.insert(newNotebook);
+    return newNotebook;
 }
 
-function loadNotebook(notebook) {
-    if(!$.inArray(notebook, getNotebooks())) {
-        return 200;
-    }
-    return 'A notebook with this name already exists!';
+// Returns notebook object if found
+// Returns 404 if not found
+function loadNotebook(notebookName) {
+    if(notebookDB.find({name: notebookName}, function(err, docs) {
+        if(docs.length > 0) {
+            return docs[0];
+        }
+    }));
+    return 404;
 }
 
 // Returns last opened notebook
 function getLastNotebook() {
-    return null;
+    return settings.globalProperties.lastOpened;
 }
 
 // Returns a list of all available notebooks names
 function getNotebooks() {
-    return [];
+    return notebooks;
 }
 
+
+notebookDB.loadDatabase();
 module.exports.getNotebooks = getNotebooks;
 module.exports.loadNotebook = loadNotebook;
 module.exports.getLastNotebook = getLastNotebook;

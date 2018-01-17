@@ -16,13 +16,16 @@ function createNotebook() {
         return;
     }
     var result = notebook.loadNotebook($('#createNotebookName').val());
-    if(result != 200) {
+    if(result == 404) {
         $('#invalidNameError').remove();
         $('#createFormWrapper').prepend('<h3 id="invalidNameError" style="color: red;">' + result + '</h3>');
     } else {
-        console.log("HELLO!");
+        loadNotebookUI(notebook);
     }
+}
 
+function loadNotebookUI(notebook) {
+    $('#notebookName').val(notebook.name);
 }
 
 function addToolBarOptions() {
@@ -36,7 +39,7 @@ function createNote() {
 
 }
 
-function selectNotebook() {
+function selectNotebookClick() {
     if(notebook.getLastNotebook() != null) {
         openNotebook(notebook.getLastNotebook());
         return;
