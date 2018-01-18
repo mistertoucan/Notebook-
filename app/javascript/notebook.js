@@ -3,9 +3,14 @@ var settings = require('./settings.js');
 var path = require('path');
 var Datastore = require('nedb');
 
-var $ = require('jquery');;
+var $ = require('jquery');
 
 var notebooks = [];
+var Notebook = function(name, dateCreated, categories) {
+    this.name = name;
+    this.dateCreated = dateCreated;
+    this.categories = categories;
+};
 
 let notebookDB = new Datastore({
     filename: path.join(settings.homePath, 'notebooks.db'),
@@ -14,26 +19,20 @@ let notebookDB = new Datastore({
 });
 
 notebookDB.loadDatabase(function(err) {
-    notebookDB.selectAll().forEach(function(notebook) {
-       notebooks.append(notebook);
-    });
+    notebooks = notebookDB.getAllData();
     var found = false;
     notebooks.forEach(function(notebook) {
-       if(notebook.name == settings.globalProperties.lastOpened) {
+       if(notebook.name == settings.globalProperties['lastOpened']) {
            found = true;
            return;
        }
     });
     if(!found) {
-        settings.globalProperties.lastOpened = null;
+        if(settings.globalProperties != null) {
+            settings.globalProperties['lastOpened'] = null;
+        }
     }
 });
-
-var Notebook = function(name, dateCreated, categories) {
-  this.name = name;
-  this.dateCreated = dateCreated;
-  this.categories = categories;
-};
 
 // Return Codes:
 // 200: All good created!
@@ -63,7 +62,10 @@ function loadNotebook(notebookName) {
 
 // Returns last opened notebook
 function getLastNotebook() {
-    return settings.globalProperties.lastOpened;
+    if(settings.globalProperties != null) {
+        return settings.globalProperties['lastOpened'];
+    }
+    return null;
 }
 
 // Returns a list of all available notebooks names
@@ -71,8 +73,8 @@ function getNotebooks() {
     return notebooks;
 }
 
-
-notebookDB.loadDatabase();
+module.exports.LOADED = notebookDB.loadDatabase();
+module.exports.addNotebook = addNotebook;
 module.exports.getNotebooks = getNotebooks;
 module.exports.loadNotebook = loadNotebook;
 module.exports.getLastNotebook = getLastNotebook;

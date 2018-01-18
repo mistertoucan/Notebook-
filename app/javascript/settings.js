@@ -5,8 +5,6 @@ var Datastore = require('nedb');
 let homePath =  os.homedir();
 const platform = os.platform();
 
-let properties;
-
 // Finds notebook homePath based on platform
 if(platform == 'darwin') {
     homePath += "/Library/Application Support/Notebook+";
@@ -31,15 +29,16 @@ var defaultProperties = new SessionProperties(null, 14, 'Courier', 2);
 sessionDB.loadDatabase(function(err) {
     if(sessionDB.getAllData().length == 0) {
         sessionDB.insert(defaultProperties);
+        console.log(sessionDB.getAllData()[0]);
     }
-    properties = sessionDB.getAllData()[0];
+    exports.globalProperties = sessionDB.getAllData()[0];
 });
 
 function updateProperties() {
     sessionDB.remove(0);
-    sessionDB.insert(properties);
+    sessionDB.insert(exports.globalProperties);
 }
 
 exports.homePath = homePath;
-exports.globalProperties = properties;
+exports.LOADED = sessionDB.loadDatabase();
 exports.updateProperties = updateProperties;

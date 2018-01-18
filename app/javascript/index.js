@@ -16,16 +16,25 @@ function createNotebook() {
         return;
     }
     var result = notebook.loadNotebook($('#createNotebookName').val());
+    // If notebook not found load new notebook
     if(result == 404) {
-        $('#invalidNameError').remove();
-        $('#createFormWrapper').prepend('<h3 id="invalidNameError" style="color: red;">' + result + '</h3>');
+        var nb = notebook.addNotebook($('#createNotebookName').val());
+        loadNotebookUI(nb);
     } else {
-        loadNotebookUI(notebook);
+        loadNotebookUI(result);
     }
 }
 
 function loadNotebookUI(notebook) {
-    $('#notebookName').val(notebook.name);
+    $('#notebookName').text(notebook.name);
+    $('#createNotebook').hide();
+    $('#noNoteMessage').show();
+}
+
+function loadSidebar(notebook) {
+    notebook.categories.keys.forEach(function() {
+
+    });
 }
 
 function addToolBarOptions() {
@@ -39,11 +48,12 @@ function createNote() {
 
 }
 
-function selectNotebookClick() {
+function selectNotebook() {
     if(notebook.getLastNotebook() != null) {
         openNotebook(notebook.getLastNotebook());
         return;
     }
+    $('#noNoteMessage').hide();
     $('#selectNotebook').removeClass('hidden');
     $('#note').hide();
     if(notebook.getNotebooks().length == 0) {
