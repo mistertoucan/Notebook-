@@ -44,7 +44,7 @@ function addNotebook(notebookName) {
             return 300;
         }
     }));
-    newNotebook = new Notebook(notebookName, new Date(), {});
+    newNotebook = new Notebook(notebookName, new Date(), {hello: []});
     notebookDB.insert(newNotebook);
     return newNotebook;
 }

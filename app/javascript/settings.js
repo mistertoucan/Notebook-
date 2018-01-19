@@ -29,7 +29,6 @@ var defaultProperties = new SessionProperties(null, 14, 'Courier', 2);
 sessionDB.loadDatabase(function(err) {
     if(sessionDB.getAllData().length == 0) {
         sessionDB.insert(defaultProperties);
-        console.log(sessionDB.getAllData()[0]);
     }
     exports.globalProperties = sessionDB.getAllData()[0];
 });

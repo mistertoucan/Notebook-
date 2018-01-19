@@ -29,12 +29,20 @@ function loadNotebookUI(notebook) {
     $('#notebookName').text(notebook.name);
     $('#createNotebook').hide();
     $('#noNoteMessage').show();
+    loadSidebar(notebook);
 }
 
-function loadSidebar(notebook) {
-    notebook.categories.keys.forEach(function() {
 
-    });
+function loadSidebar(notebook) {
+    console.log(notebook);
+    for(key in notebook.categories) {
+        $('#files').append('<li>' + key);
+    }
+    $('#noteSidebar').append('<li><button action="createCategory()" class="noteCategory btn-primary btn-lg">+</button></li>');
+}
+
+function createCategory() {
+
 }
 
 function addToolBarOptions() {
@@ -62,8 +70,6 @@ function selectNotebook() {
         notebook.getNotebooks().forEach(function(name) {
            $('#selectNotebook').append(name);
         });
-
-
     }
 }
 
