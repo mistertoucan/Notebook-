@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width">
     <title>Notebook+</title>
 
-    <link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="./css/index.css"/>
+    <script type="text/javascript"> window.$ = window.JQuery = require('jquery'); </script>
+    <script type="text/javascript" src="./javascript/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" type="text/css" href="./css/colors.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/page.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/sidebar.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/toolbar.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/editor.css"/>
 
     <script type="text/javascript" src="./javascript/index.js"></script>
 </head>
@@ -15,9 +22,10 @@
 <div id="page">
     <div id="navbar" class="color-primary-1">
         <ul id="toolbar">
-            <li>Font Size: <select id="fontSizeTool"></select></li>
-
-            <li>Color: </li>
+            <li class="tool-button">Font Size: <select id="fontSizeTool"></select></li>
+            <li class="tool-button">Color: </li>
+            <li class="tool-button">Bold</li>
+            <li class="tool-button">Underline</li>
         </ul>
     </div>
 
@@ -28,16 +36,12 @@
             </div>
             <div id="selectNotebook" class="noteArea hidden">
                 <div id="createNotebook" class="hidden">
-                    <div id="createFormWrapper" class="form-group">
-                        <label for="createNotebookName">Name:</label>
-                        <input type="string" class="form-control" id="createNotebookName" style="width: 65%;"/>
-                        <button type="submit" class="btn btn-primary" style="margin-top: 25px;" onclick="createNotebook();">Create</button>
-                    </div>
+                    <p>Hello</p>
                 </div>
             </div>
             <div id="note" class="hidden">
                 <div id="noteInfo">
-                    <p>Created 01/01/10</p>
+
                 </div>
                 <div id="noteEditor" contenteditable="true">
                 </div>

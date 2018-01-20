@@ -1,0 +1,10 @@
+body {
+    overflow: hidden;
+    font-size: 14px;
+    font-family: 'Courier';
+}
+
+#page {
+    width: 100%;
+    height: 100%;
+}

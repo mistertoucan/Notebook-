@@ -1,0 +1,19 @@
+#navbar {
+    width: 85%;
+    float: right;
+    height: 5%;
+    opacity: 0.5;
+    margin-left: 15%;
+    position: absolute;
+}
+
+#toolbar {
+    display: inline-block;
+    list-style-type: none;
+    text-align: center;
+}
+
+#toolbar li {
+    float: left;
+    margin: 0 10px 0 10px;
+}
