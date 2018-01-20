@@ -3,25 +3,40 @@ var $ = require('jquery');
 var notebook = require('./javascript/notebook.js');
 
 $(document).ready(function() {
-    if(notebook.getLastNotebook() == null) {
-        selectNotebook();
-    }
+    initToolBar();
+    selectNotebook();
+
+    addEventListeners();
 });
 
+function addEventListeners() {
+    $('.list-available-notebook').click(function() {
+
+       $(this).toggleClass('active selected-notebook');
+    });
+
+    $('#page').click(function() {
+       console.log('Hello1');
+    });
+}
+
 function createNotebook() {
-    $('#createNotebookName').removeClass('warning');
-    if(!$('#createNotebookName').val()) {
-        console.log($('#createNotebookName').val());
-        $('#createNotebookName').addClass('warning');
-        return;
+    var notebookName = null;
+    if($('.selected-notebook').text()) {
+        notebookName = $('.selected-notebook').text();
+    } else if($('#newNotebookInputName').val()) {
+        notebookName = $('#newNotebookInputName').val();
     }
-    var result = notebook.loadNotebook($('#createNotebookName').val());
-    // If notebook not found load new notebook
-    if(result == 404) {
-        var nb = notebook.addNotebook($('#createNotebookName').val());
-        loadNotebookUI(nb);
-    } else {
-        loadNotebookUI(result);
+    if(notebookName != null) {
+        hideNotebookSelection();
+        var result = notebook.loadNotebook(notebookName);
+        // If notebook not found load new notebook
+        if (result == 404) {
+            var nb = notebook.addNotebook(notebookName);
+            loadNotebookUI(nb);
+        } else {
+            loadNotebookUI(result);
+        }
     }
 }
 
@@ -32,7 +47,6 @@ function loadNotebookUI(notebook) {
     loadSidebar(notebook);
 }
 
-
 function loadSidebar(notebook) {
     console.log(notebook);
     for(key in notebook.categories) {
@@ -41,36 +55,30 @@ function loadSidebar(notebook) {
     $('#noteSidebar').append('<li><button action="createCategory()" class="noteCategory btn-primary btn-lg">+</button></li>');
 }
 
-function createCategory() {
-
-}
-
-function addToolBarOptions() {
+function initToolBar() {
     for(var i = 12; i <= 36; i+= 2) {
         $('#fontSizeTool').append('<option value=' + i + ">" + i + '</option>');
     }
     $('#fontSizeTool').val(14);
 }
 
-function createNote() {
-
+function hideNotebookSelection() {
+    $('#selectNotebook').hide();
+    $('#emptyNote').show();
 }
 
 function selectNotebook() {
+    $('#emptyNote').hide();
+    $('#note').hide();
     if(notebook.getLastNotebook() != null) {
         openNotebook(notebook.getLastNotebook());
         return;
     }
-    $('#noNoteMessage').hide();
-    $('#selectNotebook').removeClass('hidden');
-    $('#note').hide();
-    if(notebook.getNotebooks().length == 0) {
-        $('#createNotebook').removeClass('hidden');
-    } else {
-        notebook.getNotebooks().forEach(function(name) {
-           $('#selectNotebook').append(name);
-        });
-    }
+
+    notebook.getNotebooks().forEach(function(notebook) {
+       $('#availableNotebooks').prepend('<li class="list-group-item list-available-notebook">' + notebook.name + '</li>');
+    });
+
 }
 
 function openNotebook() {

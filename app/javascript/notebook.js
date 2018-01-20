@@ -15,24 +15,26 @@ var Notebook = function(name, dateCreated, categories) {
 let notebookDB = new Datastore({
     filename: path.join(settings.homePath, 'notebooks.db'),
     timestampData: true,
-    autoload: false
+    autoload: true
 });
 
-notebookDB.loadDatabase(function(err) {
+function init() {
     notebooks = notebookDB.getAllData();
     var found = false;
-    notebooks.forEach(function(notebook) {
-       if(notebook.name == settings.globalProperties['lastOpened']) {
-           found = true;
-           return;
-       }
+    notebooks.forEach(function (notebook) {
+        if (notebook.name == settings.globalProperties['lastOpened']) {
+            found = true;
+            return;
+        }
     });
-    if(!found) {
-        if(settings.globalProperties != null) {
+    if (!found) {
+        if (settings.globalProperties != null) {
             settings.globalProperties['lastOpened'] = null;
         }
     }
-});
+}
+
+init();
 
 // Return Codes:
 // 200: All good created!
@@ -73,7 +75,6 @@ function getNotebooks() {
     return notebooks;
 }
 
-module.exports.LOADED = notebookDB.loadDatabase();
 module.exports.addNotebook = addNotebook;
 module.exports.getNotebooks = getNotebooks;
 module.exports.loadNotebook = loadNotebook;

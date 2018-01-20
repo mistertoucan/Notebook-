@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width">
     <title>Notebook+</title>
 
-    <script type="text/javascript"> window.$ = window.JQuery = require('jquery'); </script>
+    <script type="text/javascript"> window.$ = window.jQuery = require('../node_modules/jquery/dist/jquery.min.js'); </script>
     <script type="text/javascript" src="./javascript/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css"/>
 
@@ -30,20 +30,30 @@
     </div>
 
     <div id="editorWindow">
-        <div class="container" style="height: 100%;">
-            <div id="noNoteMessage" class="noteArea">
-                <p>No note to display</p>
-            </div>
-            <div id="selectNotebook" class="noteArea hidden">
-                <div id="createNotebook" class="hidden">
-                    <p>Hello</p>
-                </div>
-            </div>
-            <div id="note" class="hidden">
-                <div id="noteInfo">
+        <div class="container" style="height: 100%; text-align: left;">
+            <div class="noteArea">
+                <div id="selectNotebook">
+                    <h1 class="alert-info">Available Notebooks: </h1>
+                    <ul id="availableNotebooks" class="list-group">
 
+                        <ul class="list-group-item list-group-item-action"><label for="newNotebookInputName">Create a Notebook: </label><input id="newNotebookInputName" type="text"/></ul>
+                    </ul>
+                    <button type="submit" onclick="createNotebook();" class="btn btn-info" style="margin-top: 1%;">Load</button>
                 </div>
-                <div id="noteEditor" contenteditable="true">
+                <div id="emptyNote">
+                    <div class="container">
+                        <h1>No Note Loaded</h1>
+                        <p>Load or create a note on the sidebar</p>
+                    </div>
+                </div>
+                <div id="note">
+                    <div id="noteInfo">
+                        <span id="note_property_title" class="note-property"></span>
+                        <span id="note_property_DateCreated" class="note-property"></span>
+                        <span id="note_property_LastEdited" class="note-property"></span>
+                    </div>
+                    <div id="noteEditor" contenteditable="true">
+                    </div>
                 </div>
             </div>
         </div>

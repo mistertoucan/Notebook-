@@ -15,7 +15,17 @@ if(platform == 'darwin') {
     process.exit(-1);
 }
 
-let sessionDB = new Datastore({filename: path.join(homePath, 'session.db'), timestampData: true, autoload: false});
+let sessionDB = new Datastore({
+        filename: path.join(homePath, 'session.db'),
+        timestampData: true,
+        autoload: true
+});
+
+// Loads sessiond data from last open
+if(sessionDB.getAllData().length == 0) {
+    sessionDB.insert(defaultProperties);
+}
+
 
 var SessionProperties = function(lastOpenedNotebook, fontSize, fontFamily, lineSpacing) {
     this.lastOpened = lastOpenedNotebook;
@@ -26,18 +36,11 @@ var SessionProperties = function(lastOpenedNotebook, fontSize, fontFamily, lineS
 
 var defaultProperties = new SessionProperties(null, 14, 'Courier', 2);
 
-sessionDB.loadDatabase(function(err) {
-    if(sessionDB.getAllData().length == 0) {
-        sessionDB.insert(defaultProperties);
-    }
-    exports.globalProperties = sessionDB.getAllData()[0];
-});
-
 function updateProperties() {
     sessionDB.remove(0);
     sessionDB.insert(exports.globalProperties);
 }
 
 exports.homePath = homePath;
-exports.LOADED = sessionDB.loadDatabase();
+exports.globalProperties = sessionDB.getAllData()[0];
 exports.updateProperties = updateProperties;

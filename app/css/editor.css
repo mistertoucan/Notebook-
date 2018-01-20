@@ -8,12 +8,20 @@
     opacity: 0.7;
 }
 
+.active {
+    background-color: #5cA0ff;
+}
+
+.list-available-notebook:hover {
+    background-color: #5cb3fd;
+}
+
 #editorWindow {
     float: right;
     margin-top: 5%;
-    height: 95%;
-    width: 82%;
-    margin-left: 18%;
+    height: 96%;
+    width: 84%;
+    margin-left: 16%;
     position: absolute;
 }
 
