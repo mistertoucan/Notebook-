@@ -40,3 +40,15 @@
     position: absolute;
 }
 
+#create_note_wrapper {
+    position: absolute;
+    margin-top: 90%;
+}
+
+#addNoteButton {
+    height: 10%;
+    width: 100%;
+}
+
+
+

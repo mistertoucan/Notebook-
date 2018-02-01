@@ -48,6 +48,8 @@ function addNotebook(notebookName) {
     }));
     newNotebook = new Notebook(notebookName, new Date(), {hello: []});
     notebookDB.insert(newNotebook);
+    console.log('ADDED NOTEBOOK!');
+
     return newNotebook;
 }
 
@@ -72,9 +74,13 @@ function getLastNotebook() {
 
 // Returns a list of all available notebooks names
 function getNotebooks() {
-    return notebooks;
+    if(notebookDB == null) {
+        notebookDB.loadDatabase();
+    }
+    notebookDB.getAllData();
 }
 
+module.exports.notebookDB = notebookDB;
 module.exports.addNotebook = addNotebook;
 module.exports.getNotebooks = getNotebooks;
 module.exports.loadNotebook = loadNotebook;

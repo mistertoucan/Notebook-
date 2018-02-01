@@ -62,6 +62,10 @@ function initToolBar() {
     $('#fontSizeTool').val(14);
 }
 
+function createNote() {
+
+}
+
 function hideNotebookSelection() {
     $('#selectNotebook').hide();
     $('#emptyNote').show();
@@ -75,7 +79,7 @@ function selectNotebook() {
         return;
     }
 
-    notebook.getNotebooks().forEach(function(notebook) {
+    notebook.notebookDB.getAllData().forEach(function(notebook) {
        $('#availableNotebooks').prepend('<li class="list-group-item list-available-notebook">' + notebook.name + '</li>');
     });
 

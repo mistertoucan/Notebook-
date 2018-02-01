@@ -17,3 +17,8 @@
     float: left;
     margin: 0 10px 0 10px;
 }
+
+.tool-button {
+    margin-right: 7%;
+    margin-left: 7%;
+}

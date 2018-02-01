@@ -10,6 +10,7 @@ if(platform == 'darwin') {
     homePath += "/Library/Application Support/Notebook+";
 } else if(platform == 'win32') {
     homePath += "/AppData/Local/Notebook+/";
+    console.log(homePath);
 } else {
     console.log('This system is not yet supported!');
     process.exit(-1);
