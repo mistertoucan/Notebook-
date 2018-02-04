@@ -1,3 +1,2 @@
 # Notebook+
-A lightweight javascript notebook application.
-Made using ElectronJS
+Notebook+ - A lightweight note taking application, made using Electron JS.
