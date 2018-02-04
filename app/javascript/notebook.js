@@ -6,10 +6,18 @@ var Datastore = require('nedb');
 var $ = require('jquery');
 
 var notebooks = [];
-var Notebook = function(name, dateCreated, categories) {
+
+var Note = function(name, dateCreated, content, noteID) {
     this.name = name;
     this.dateCreated = dateCreated;
-    this.categories = categories;
+    this.content = content;
+    this.noteID = noteID;
+};
+
+var Notebook = function(name, dateCreated, notes) {
+    this.name = name;
+    this.dateCreated = dateCreated;
+    this.notes = notes;
 };
 
 let notebookDB = new Datastore({
@@ -33,7 +41,6 @@ function init() {
         }
     }
 }
-
 init();
 
 // Return Codes:
@@ -46,10 +53,8 @@ function addNotebook(notebookName) {
             return 300;
         }
     }));
-    newNotebook = new Notebook(notebookName, new Date(), {hello: []});
+    newNotebook = new Notebook(notebookName, new Date(), {});
     notebookDB.insert(newNotebook);
-    console.log('ADDED NOTEBOOK!');
-
     return newNotebook;
 }
 
@@ -80,7 +85,11 @@ function getNotebooks() {
     notebookDB.getAllData();
 }
 
-module.exports.notebookDB = notebookDB;
+function updateNotebook(notebookID, newNotebook) {
+    notebookDB.update({id: notebookID}, newNotebook);
+}
+
+module.exports.Note = Note;
 module.exports.addNotebook = addNotebook;
 module.exports.getNotebooks = getNotebooks;
 module.exports.loadNotebook = loadNotebook;

@@ -2,6 +2,10 @@
 var $ = require('jquery');
 var notebook = require('./javascript/notebook.js');
 
+let noteIDCount = 1;
+var currentNotebook;
+var currentNote;
+
 $(document).ready(function() {
     initToolBar();
     selectNotebook();
@@ -18,6 +22,27 @@ function addEventListeners() {
     $('#page').click(function() {
        console.log('Hello1');
     });
+
+    $('.note').click(function() {
+        clickedNote = null;
+        currentNotebook.notes.forEach(function(note) {
+            if($(this).id == note.dateCreated) {
+                clickedNote = note;
+            }
+        });
+        loadNote(clickedNote)
+    });
+}
+
+function noteRenameEvent(event) {
+    // Cancels enter
+    // && backspace if there is only 1 character left
+    if(event.keyCode == 13 || ($('#note_property_title').text().length == 1 && event.keyCode == 8)) {
+        event.preventDefault();
+    }
+    $('#' + currentNote.noteID).text($('#note_property_title').text());
+    currentNote.name = $('#' + currentNote.noteID).text();
+    return false;
 }
 
 function createNotebook() {
@@ -41,6 +66,7 @@ function createNotebook() {
 }
 
 function loadNotebookUI(notebook) {
+    currentNotebook = notebook;
     $('#notebookName').text(notebook.name);
     $('#createNotebook').hide();
     $('#noNoteMessage').show();
@@ -48,11 +74,34 @@ function loadNotebookUI(notebook) {
 }
 
 function loadSidebar(notebook) {
-    console.log(notebook);
-    for(key in notebook.categories) {
-        $('#files').append('<li>' + key);
+    orderedDates = currentNotebook.notes.keys;
+    orderedDates.forEach(function(date) {
+        var note = notebook.notes[date];
+        if(currentNote.noteID >= noteIDCount) {
+            noteIDCount = currentNote.noteID + 1;
+        }
+        $('#files').append("<li class='note' id='" + note.noteID + "'>" + note.name + "</li>")
+    });
+}
+
+function createNote() {
+    if(currentNotebook) {
+        var creationDate = new Date();
+        $('#files').append("<li class='noteCategory' id='" + noteIDCount + "'>Note #" + noteIDCount +"</li>")
+        var note = new notebook.Note("Note #" + noteIDCount, creationDate, 'Hello World!', noteIDCount);
+        noteIDCount += 1;
+        currentNote = note;
+        loadNote(note);
     }
-    $('#noteSidebar').append('<li><button action="createCategory()" class="noteCategory btn-primary btn-lg">+</button></li>');
+}
+
+function loadNote(note) {
+    $('#emptyNote').hide();
+    $('#note').show();
+    $('#note_property_title').text(note.name);
+    $('#note_property_DateCreated').text(note.dateCreated);
+    $('#noteEditor').html(note.content);
+
 }
 
 function initToolBar() {
@@ -60,10 +109,6 @@ function initToolBar() {
         $('#fontSizeTool').append('<option value=' + i + ">" + i + '</option>');
     }
     $('#fontSizeTool').val(14);
-}
-
-function createNote() {
-
 }
 
 function hideNotebookSelection() {
@@ -79,12 +124,8 @@ function selectNotebook() {
         return;
     }
 
-    notebook.notebookDB.getAllData().forEach(function(notebook) {
+    notebook.getNotebooks().forEach(function(notebook) {
        $('#availableNotebooks').prepend('<li class="list-group-item list-available-notebook">' + notebook.name + '</li>');
     });
-
-}
-
-function openNotebook() {
 
 }

@@ -18,18 +18,33 @@
     font-size: 1.2em;
 }
 
-.noteCategory {
-    margin-top: 10%;
-    width: 100%;
-    background-color: #1b6d85;
-    height: 10%;
-    text-align: center;
+.note {
+    text-decoration: underline;
+    text-decoration-color: #5cb3fd;
 }
 
 #files {
+    height: 90%;
+    min-height: 40%;
     position: absolute;
-    margin-top: 150px;
-    overflow-y: scroll;
+    overflow-x: hidden;
+    list-style: none;
+    width: 100%;
+    margin-top: 50px;
+    left: -22px;
+    margin-right: 0px;
+    margin-left: 0px;
+    text-align: center;
+}
+
+#addNoteButton {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    margin-right: 0px;
+    margin-left: 0px;
+    top: 90%;
+    height: 10%;
 }
 
 .brand {
@@ -38,16 +53,6 @@
     text-align: center;
     font-size: 1.8em;
     position: absolute;
-}
-
-#create_note_wrapper {
-    position: absolute;
-    margin-top: 90%;
-}
-
-#addNoteButton {
-    height: 10%;
-    width: 100%;
 }
 
 

@@ -48,8 +48,10 @@
                 </div>
                 <div id="note">
                     <div id="noteInfo">
-                        <span id="note_property_title" class="note-property"></span>
+                        <span id="note_property_title" class="note-property" contenteditable="true" onkeypress="noteRenameEvent(event);"></span>
+                        <br>
                         <span id="note_property_DateCreated" class="note-property"></span>
+                        <br>
                         <span id="note_property_LastEdited" class="note-property"></span>
                     </div>
                     <div id="noteEditor" contenteditable="true">
@@ -61,14 +63,12 @@
 
     <div id="sideBar" class="color-primary-4">
         <div class="brand">
-            <p id="notebookName">Notebook</p>
+            <p id="notebookName">Notebook+</p>
         </div>
         <ul id="files">
 
         </ul>
-        <div id="create_note_wrapper">
-            <button id="addNoteButton"onclick="createNote();" class="btn btn-success">Add+</button>
-        </div>
+        <button id="addNoteButton" onclick="createNote();" class="btn btn-success btn-lg noteCategory">Add+</button>
     </div>
 
 
