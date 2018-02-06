@@ -5,6 +5,14 @@ var Datastore = require('nedb');
 let homePath =  os.homedir();
 const platform = os.platform();
 
+var SessionProperties = function(fontSize, fontFamily, lineSpacing) {
+    this.fontSize = fontSize;
+    this.fontFamily = fontFamily;
+    this.lineSpacing = lineSpacing;
+};
+
+var defaultProperties = new SessionProperties(null, 14, 'Courier', 2);
+
 // Finds notebook homePath based on platform
 if(platform == 'darwin') {
     homePath += "/Library/Application Support/Notebook+";
@@ -18,24 +26,20 @@ if(platform == 'darwin') {
 
 let sessionDB = new Datastore({
         filename: path.join(homePath, 'session.db'),
-        timestampData: true,
-        autoload: true
+        timestampData: true
 });
 
-// Loads sessiond data from last open
-if(sessionDB.getAllData().length == 0) {
-    sessionDB.insert(defaultProperties);
-}
+console.log(path.join(homePath, 'session.db'));
 
-
-var SessionProperties = function(lastOpenedNotebook, fontSize, fontFamily, lineSpacing) {
-    this.lastOpened = lastOpenedNotebook;
-    this.fontSize = fontSize;
-    this.fontFamily = fontFamily;
-    this.lineSpacing = lineSpacing;
-};
-
-var defaultProperties = new SessionProperties(null, 14, 'Courier', 2);
+// Loads session data from last open
+sessionDB.loadDatabase(function() {
+    if (sessionDB.getAllData().length == 0) {
+        sessionDB.insert(defaultProperties);
+    }
+    sessionDB.find({}, function(docs, err) {
+        console.log(docs);
+    });
+});
 
 function updateProperties() {
     sessionDB.remove(0);

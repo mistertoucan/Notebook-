@@ -21,6 +21,13 @@
 .note {
     text-decoration: underline;
     text-decoration-color: #5cb3fd;
+    color: #FFFFFD;
+    background-color: transparent;
+    -webkit-appearance: default-button;
+}
+
+.note:hover {
+    color: #daeeff;
 }
 
 #files {

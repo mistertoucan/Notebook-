@@ -14,16 +14,12 @@ $(document).ready(function() {
 });
 
 function addEventListeners() {
-    $('.list-available-notebook').click(function() {
-
-       $(this).toggleClass('active selected-notebook');
-    });
-
     $('#page').click(function() {
        console.log('Hello1');
     });
 
     $('.note').click(function() {
+        console.log('note clicked!');
         clickedNote = null;
         currentNotebook.notes.forEach(function(note) {
             if($(this).id == note.dateCreated) {
@@ -31,6 +27,11 @@ function addEventListeners() {
             }
         });
         loadNote(clickedNote)
+    });
+
+    $('#fontSizeTool').click(function() {
+        $('#noteEditor').html('</span>');
+        $('#noteEditor').html('<span style="font-size:' + $('#fontSizeTool').val() + '">');
     });
 }
 
@@ -47,27 +48,29 @@ function noteRenameEvent(event) {
 
 function createNotebook() {
     var notebookName = null;
-    if($('.selected-notebook').text()) {
-        notebookName = $('.selected-notebook').text();
-    } else if($('#newNotebookInputName').val()) {
+    if ($('.selected-notebook').text()) {
+        notebookName = $('.selected-notebook').attr('id');
+    } else if ($('#newNotebookInputName').val()) {
         notebookName = $('#newNotebookInputName').val();
     }
-    if(notebookName != null) {
+    if (notebookName != null) {
         hideNotebookSelection();
-        var result = notebook.loadNotebook(notebookName);
+        // Loads Notebook by ID
         // If notebook not found load new notebook
-        if (result == 404) {
-            var nb = notebook.addNotebook(notebookName);
-            loadNotebookUI(nb);
-        } else {
-            loadNotebookUI(result);
-        }
+        result = notebook.loadNotebook(notebookName, function (result) {
+            if (result == 404) {
+                var nb = notebook.addNotebook(notebookName);
+                loadNotebookUI(nb);
+            } else {
+                loadNotebookUI(result);
+            }
+        });
     }
 }
 
 function loadNotebookUI(notebook) {
     currentNotebook = notebook;
-    $('#notebookName').text(notebook.name);
+    $('#notebookName').text(currentNotebook.name);
     $('#createNotebook').hide();
     $('#noNoteMessage').show();
     loadSidebar(notebook);
@@ -75,19 +78,21 @@ function loadNotebookUI(notebook) {
 
 function loadSidebar(notebook) {
     orderedDates = currentNotebook.notes.keys;
-    orderedDates.forEach(function(date) {
-        var note = notebook.notes[date];
-        if(currentNote.noteID >= noteIDCount) {
-            noteIDCount = currentNote.noteID + 1;
-        }
-        $('#files').append("<li class='note' id='" + note.noteID + "'>" + note.name + "</li>")
-    });
+    if(orderedDates) {
+        orderedDates.forEach(function (date) {
+            var note = notebook.notes[date];
+            if (currentNote.noteID >= noteIDCount) {
+                noteIDCount = currentNote.noteID + 1;
+            }
+            $('#files').append("<li class='note' id='" + note.noteID + ">" + note.name + "</li>")
+        });
+    }
 }
 
 function createNote() {
     if(currentNotebook) {
         var creationDate = new Date();
-        $('#files').append("<li class='noteCategory' id='" + noteIDCount + "'>Note #" + noteIDCount +"</li>")
+        $('#files').append("<li class='note noteCategory' id='" + noteIDCount  + "'>" + "Note #" + noteIDCount +"</li>")
         var note = new notebook.Note("Note #" + noteIDCount, creationDate, 'Hello World!', noteIDCount);
         noteIDCount += 1;
         currentNote = note;
@@ -109,6 +114,7 @@ function initToolBar() {
         $('#fontSizeTool').append('<option value=' + i + ">" + i + '</option>');
     }
     $('#fontSizeTool').val(14);
+
 }
 
 function hideNotebookSelection() {
@@ -119,13 +125,16 @@ function hideNotebookSelection() {
 function selectNotebook() {
     $('#emptyNote').hide();
     $('#note').hide();
-    if(notebook.getLastNotebook() != null) {
-        openNotebook(notebook.getLastNotebook());
-        return;
-    }
 
-    notebook.getNotebooks().forEach(function(notebook) {
-       $('#availableNotebooks').prepend('<li class="list-group-item list-available-notebook">' + notebook.name + '</li>');
-    });
+    setTimeout(function() {
+        notebook.getNotebooks().forEach(function (notebook) {
+            console.log(notebook._id);
+            $('#availableNotebooks').prepend('<li class="list-group-item list-available-notebook" id="' + notebook._id + '">' + notebook.name + '</li>');
+        });
+        $('.list-available-notebook').click(function() {
+            $('.list-available-notebook').removeClass('active');
+            $(this).toggleClass('active selected-notebook');
+        });
+    }, 250);
 
 }
