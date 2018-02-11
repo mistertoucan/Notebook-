@@ -2,36 +2,31 @@
 var $ = require('jquery');
 var notebook = require('./javascript/notebook.js');
 
-let noteIDCount = 1;
-var currentNotebook;
+let currentNotebook;
 var currentNote;
 
 $(document).ready(function() {
     initToolBar();
     selectNotebook();
 
-    addEventListeners();
+    rebindListeners();
 });
 
-function addEventListeners() {
-    $('.list-available-notebook').click(function() {
-
-       $(this).toggleClass('active selected-notebook');
-    });
-
-    $('#page').click(function() {
-       console.log('Hello1');
-    });
-
+function rebindListeners() {
     $('.note').click(function() {
-        clickedNote = null;
-        currentNotebook.notes.forEach(function(note) {
-            if($(this).id == note.dateCreated) {
-                clickedNote = note;
-            }
+        console.log("CLICKED!");
+        notebook.loadNote($(this).attr('id'), function(note) {
+           this.loadNote(note);
         });
-        loadNote(clickedNote)
+        $('.note').removeClass('selected_note');
+        $(this).addClass('selected_note');
     });
+
+    $('.list-available-notebook').click(function() {
+        $('.list-available-notebook').removeClass('active');
+        $(this).toggleClass('active selected-notebook');
+    });
+
 }
 
 function noteRenameEvent(event) {
@@ -40,58 +35,78 @@ function noteRenameEvent(event) {
     if(event.keyCode == 13 || ($('#note_property_title').text().length == 1 && event.keyCode == 8)) {
         event.preventDefault();
     }
-    $('#' + currentNote.noteID).text($('#note_property_title').text());
-    currentNote.name = $('#' + currentNote.noteID).text();
+    $('#' + currentNote._id).text($('#note_property_title').text());
+    currentNote.name = $('#note_property_title').text();
     return false;
 }
 
+function noteTypeEvent(event) {
+    currentNote.content = $('#noteEditor').html();
+    saveNote();
+}
+
+function saveNote() {
+    if(currentNote != null) {
+        currentNote.name = $('#note_property_title').text();
+        currentNote.content = $('#noteEditor').html();
+        notebook.updateNote(currentNote);
+        currentNote.updatedAt = new Date();
+        $('#note_property_LastEdited').text(currentNote.updatedAt);
+    }
+}
+
 function createNotebook() {
+    var notebookID = null;
     var notebookName = null;
     if($('.selected-notebook').text()) {
-        notebookName = $('.selected-notebook').text();
+        notebookID = $('.selected-notebook').attr('id');
     } else if($('#newNotebookInputName').val()) {
         notebookName = $('#newNotebookInputName').val();
     }
-    if(notebookName != null) {
+    // Create new notebook if name isn't null
+    // Load notebook if ID isn't null
+    if(notebookName != null || notebookID != null) {
         hideNotebookSelection();
-        var result = notebook.loadNotebook(notebookName);
-        // If notebook not found load new notebook
-        if (result == 404) {
-            var nb = notebook.addNotebook(notebookName);
-            loadNotebookUI(nb);
+        if(notebookName) {
+            notebook.addNotebook(notebookName, loadNotebook);
         } else {
-            loadNotebookUI(result);
+            notebook.loadNotebook(notebookID, loadNotebook);
         }
+
     }
 }
 
-function loadNotebookUI(notebook) {
+// Callback function which loads notebook after finding object in DB
+function loadNotebook(notebook) {
     currentNotebook = notebook;
-    $('#notebookName').text(notebook.name);
-    $('#createNotebook').hide();
-    $('#noNoteMessage').show();
-    loadSidebar(notebook);
+    loadNotebookUI(notebook);
 }
 
-function loadSidebar(notebook) {
-    orderedDates = currentNotebook.notes.keys;
-    orderedDates.forEach(function(date) {
-        var note = notebook.notes[date];
-        if(currentNote.noteID >= noteIDCount) {
-            noteIDCount = currentNote.noteID + 1;
-        }
-        $('#files').append("<li class='note' id='" + note.noteID + "'>" + note.name + "</li>")
+function loadNotebookUI() {
+    $('#notebookName').text(currentNotebook.name);
+    $('#createNotebook').hide();
+    $('#noNoteMessage').show();
+    loadSidebar();
+}
+
+function loadSidebar() {
+    // Sort the notes by their date of creation
+    notebook.getNotes(currentNotebook._id, function(notes) {
+        // Loop through each note and add it to the sidebar
+        notes.forEach(function(note) {
+            $('#files').append("<li class='note' id='" + note._id+ "'>" + note.name + "</li>")
+        });
+        rebindListeners();
     });
 }
 
 function createNote() {
     if(currentNotebook) {
-        var creationDate = new Date();
-        $('#files').append("<li class='noteCategory' id='" + noteIDCount + "'>Note #" + noteIDCount +"</li>")
-        var note = new notebook.Note("Note #" + noteIDCount, creationDate, 'Hello World!', noteIDCount);
-        noteIDCount += 1;
-        currentNote = note;
-        loadNote(note);
+        notebook.createNote(new notebook.Note(currentNotebook._id, 'New Note', ''), function(note) {
+            currentNote = note;
+            loadNote(note);
+            $('#files').append("<li class='note selected_note' id='" + note._id+ "'>" + note.name + "</li>");
+        });
     }
 }
 
@@ -99,9 +114,13 @@ function loadNote(note) {
     $('#emptyNote').hide();
     $('#note').show();
     $('#note_property_title').text(note.name);
-    $('#note_property_DateCreated').text(note.dateCreated);
+    $('#note_property_DateCreated').text(note.createdAt);
+    $('#note_property_LastEdited').text(note.updatedAt);
     $('#noteEditor').html(note.content);
 
+    $('.note').removeClass('selected_note');
+    $('#' + note._id).addClass('selected_note');
+    currentNote = note;
 }
 
 function initToolBar() {
@@ -119,13 +138,15 @@ function hideNotebookSelection() {
 function selectNotebook() {
     $('#emptyNote').hide();
     $('#note').hide();
-    if(notebook.getLastNotebook() != null) {
-        openNotebook(notebook.getLastNotebook());
-        return;
-    }
 
-    notebook.getNotebooks().forEach(function(notebook) {
-       $('#availableNotebooks').prepend('<li class="list-group-item list-available-notebook">' + notebook.name + '</li>');
+    notebook.getNotebooks(function(notebooks) {
+        notebooks.forEach(function(notebook) {
+            console.log(notebook);
+            $('#availableNotebooks').prepend('<li id="' + notebook._id + '" class="list-group-item list-available-notebook">' + notebook.name + '</li>');
+        });
+        rebindListeners();
     });
 
 }
+
+

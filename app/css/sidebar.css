@@ -55,5 +55,9 @@
     position: absolute;
 }
 
+.selected_note {
+    color: orange;
+}
+
 
 

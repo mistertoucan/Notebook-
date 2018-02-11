@@ -3,94 +3,88 @@ var settings = require('./settings.js');
 var path = require('path');
 var Datastore = require('nedb');
 
-var $ = require('jquery');
-
-var notebooks = [];
-
-var Note = function(name, dateCreated, content, noteID) {
+var Notebook = function(name) {
     this.name = name;
-    this.dateCreated = dateCreated;
+};
+var Note = function(notebookID, name, content) {
+    this.notebookID = notebookID;
+    this.name = name;
     this.content = content;
-    this.noteID = noteID;
 };
 
-var Notebook = function(name, dateCreated, notes) {
-    this.name = name;
-    this.dateCreated = dateCreated;
-    this.notes = notes;
-};
-
+// Save notebooks themselves here
 let notebookDB = new Datastore({
     filename: path.join(settings.homePath, 'notebooks.db'),
     timestampData: true,
     autoload: true
 });
 
-function init() {
-    notebooks = notebookDB.getAllData();
-    var found = false;
-    notebooks.forEach(function (notebook) {
-        if (notebook.name == settings.globalProperties['lastOpened']) {
-            found = true;
-            return;
-        }
-    });
-    if (!found) {
-        if (settings.globalProperties != null) {
-            settings.globalProperties['lastOpened'] = null;
-        }
-    }
-}
-init();
+// Save note objects associated to notebooks here
+let notesDB = new Datastore({
+    filename: path.join(settings.homePath, 'notes.db'),
+    timestampData: true,
+    autoload: true
+});
 
-// Return Codes:
-// 200: All good created!
-// 300: Notebook With Name Already Exists
-// 400: Db Problem
-function addNotebook(notebookName) {
-    if(notebookDB.find({name: notebookName}, function(err, docs) {
-        if(docs.length > 0) {
-            return 300;
-        }
-    }));
-    newNotebook = new Notebook(notebookName, new Date(), {});
-    notebookDB.insert(newNotebook);
-    return newNotebook;
+// Creates a new notebook object & returns it
+function addNotebook(notebookName, callback) {
+    newNotebook = new Notebook(notebookName);
+    notebookDB.insert(newNotebook, function(err, newDoc) {
+        callback(newDoc);
+    });
 }
 
 // Returns notebook object if found
 // Returns 404 if not found
-function loadNotebook(notebookName) {
-    if(notebookDB.find({name: notebookName}, function(err, docs) {
-        if(docs.length > 0) {
-            return docs[0];
-        }
+function loadNotebook(notebookID, callback) {
+    if(notebookDB.find({_id: notebookID}).limit(1).exec(function(err, docs) {
+        callback(docs[0]);
     }));
-    return 404;
 }
 
-// Returns last opened notebook
-function getLastNotebook() {
-    if(settings.globalProperties != null) {
-        return settings.globalProperties['lastOpened'];
-    }
-    return null;
+// Returns all available notebooks
+function getNotebooks(callback) {
+    notebookDB.find({}, function(err, docs) {
+       callback(docs);
+    });
 }
 
-// Returns a list of all available notebooks names
-function getNotebooks() {
-    if(notebookDB == null) {
-        notebookDB.loadDatabase();
-    }
-    notebookDB.getAllData();
+// Attempts to find all available notes for a notebook
+function getNotes(notebookID, callback) {
+    notesDB.find({notebookID: notebookID}).sort({updatedAt: 1}).exec(function(err, docs) {
+        console.log(docs);
+        callback(docs);
+    });
 }
 
-function updateNotebook(notebookID, newNotebook) {
-    notebookDB.update({id: notebookID}, newNotebook);
+function updateNote(note) {
+    notesDB.update({_id: note._id}, {name: note.name, content: note.content}, {}, function(err, numReplaced) {});
+}
+
+function loadNote(noteID, callback) {
+    notesDB.find({_id: noteID}).limit(1).exec(function(err, docs) {
+        callback(docs[0]);
+    });
+}
+
+function createNote(note, callback) {
+    notesDB.insert(note, function(err, newDoc) {
+        callback(newDoc);
+    });
+}
+
+function updateNotebook(notebookID, newNotebook, callback) {
+    notebookDB.update({_id: notebookID}, newNotebook, {}, function(err, numReplaced) {
+       callback(newNotebook);
+    });
 }
 
 module.exports.Note = Note;
 module.exports.addNotebook = addNotebook;
 module.exports.getNotebooks = getNotebooks;
 module.exports.loadNotebook = loadNotebook;
-module.exports.getLastNotebook = getLastNotebook;
+module.exports.getNotes = getNotes;
+module.exports.updateNote = updateNote;
+module.exports.loadNote = loadNote;
+module.exports.createNote = createNote;
+module.exports.updateNotebook = updateNotebook;

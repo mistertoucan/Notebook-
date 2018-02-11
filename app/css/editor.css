@@ -12,6 +12,10 @@
     background-color: #5cA0ff;
 }
 
+#availableNotebooks li {
+    min-height: 50px;
+}
+
 .list-available-notebook:hover {
     background-color: #5cb3fd;
 }

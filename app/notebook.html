@@ -32,11 +32,11 @@
     <div id="editorWindow">
         <div class="container" style="height: 100%; text-align: left;">
             <div class="noteArea">
-                <div id="selectNotebook">
+                <div id="selectNotebook" style="height: 100%;">
                     <h1 class="alert-info">Available Notebooks: </h1>
-                    <ul id="availableNotebooks" class="list-group">
+                    <ul id="availableNotebooks" class="list-group" style="overflow-y: scroll; max-height: 90%;">
 
-                        <ul class="list-group-item list-group-item-action"><label for="newNotebookInputName">Create a Notebook: </label><input id="newNotebookInputName" type="text"/></ul>
+                        <li class="list-group-item list-group-item-action"><label for="newNotebookInputName">Create a Notebook: </label><input id="newNotebookInputName" type="text"/></li>
                     </ul>
                     <button type="submit" onclick="createNotebook();" class="btn btn-info" style="margin-top: 1%;">Load</button>
                 </div>
@@ -54,7 +54,7 @@
                         <br>
                         <span id="note_property_LastEdited" class="note-property"></span>
                     </div>
-                    <div id="noteEditor" contenteditable="true">
+                    <div id="noteEditor" contenteditable="true" onkeypress="noteTypeEvent(event);">
                     </div>
                 </div>
             </div>
