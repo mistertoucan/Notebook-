@@ -1,6 +1,8 @@
 # Notebook+
 Notebook+ - A lightweight note taking application, made using Electron JS.
 
+![Screenshot](screenshot.png)
+
 # Features
 Notebook+ can easily store your notes in file systems called "Notebooks"
 Notebooks are designed to be easily to access and simple to use. Inside of each one
