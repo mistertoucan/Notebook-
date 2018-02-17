@@ -29,14 +29,18 @@ function rebindListeners() {
 
 }
 
-function noteRenameEvent(event) {
+function noteRenmateTypeSafety(event) {
     // Cancels enter
     // && backspace if there is only 1 character left
     if(event.keyCode == 13 || ($('#note_property_title').text().length == 1 && event.keyCode == 8)) {
         event.preventDefault();
     }
+}
+
+function noteRenameEvent(event) {
     $('#' + currentNote._id).text($('#note_property_title').text());
     currentNote.name = $('#note_property_title').text();
+    saveNote();
     return false;
 }
 
@@ -105,7 +109,7 @@ function createNote() {
         notebook.createNote(new notebook.Note(currentNotebook._id, 'New Note', ''), function(note) {
             currentNote = note;
             loadNote(note);
-            $('#files').append("<li class='note selected_note' id='" + note._id+ "'>" + note.name + "</li>");
+            $('#files').prepend("<li class='note selected_note' id='" + note._id+ "'>" + note.name + "</li>");
         });
     }
 }

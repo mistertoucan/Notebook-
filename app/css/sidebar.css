@@ -24,6 +24,7 @@
     color: #FFFFFD;
     background-color: transparent;
     -webkit-appearance: default-button;
+    margin-left: 2px;
 }
 
 .note:hover {
@@ -35,7 +36,6 @@
     min-height: 40%;
     position: absolute;
     overflow-x: hidden;
-    list-style: none;
     width: 100%;
     margin-top: 50px;
     left: -22px;
@@ -63,6 +63,10 @@
 }
 
 .selected_note {
+    color: orange;
+}
+
+.selected_note:hover {
     color: orange;
 }
 

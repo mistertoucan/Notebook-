@@ -28,7 +28,6 @@
             <li class="tool-button">Underline</li>
         </ul>
     </div>
-
     <div id="editorWindow">
         <div class="container" style="height: 100%; text-align: left;">
             <div class="noteArea">
@@ -48,7 +47,7 @@
                 </div>
                 <div id="note">
                     <div id="noteInfo">
-                        <span id="note_property_title" class="note-property" contenteditable="true" onkeypress="noteRenameEvent(event);"></span>
+                        <span id="note_property_title" class="note-property" contenteditable="true" onkeypress="noteRenmateTypeSafety(event);" onkeyup="noteRenameEvent(event);"></span>
                         <br>
                         <span id="note_property_DateCreated" class="note-property"></span>
                         <br>

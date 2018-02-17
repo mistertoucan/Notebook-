@@ -6,6 +6,7 @@ var Datastore = require('nedb');
 var Notebook = function(name) {
     this.name = name;
 };
+
 var Note = function(notebookID, name, content) {
     this.notebookID = notebookID;
     this.name = name;
@@ -51,14 +52,16 @@ function getNotebooks(callback) {
 
 // Attempts to find all available notes for a notebook
 function getNotes(notebookID, callback) {
-    notesDB.find({notebookID: notebookID}).sort({updatedAt: 1}).exec(function(err, docs) {
-        console.log(docs);
+    notesDB.find({notebookID: notebookID}).sort({createdAt: 0}).exec(function(err, docs) {
         callback(docs);
     });
 }
 
 function updateNote(note) {
-    notesDB.update({_id: note._id}, {name: note.name, content: note.content}, {}, function(err, numReplaced) {});
+    notesDB.update({_id: note._id}, {name: note.name, content: note.content, notebookID: note.notebookID}, {}, function(err, numReplaced) {
+        console.log("UPDATED NOTE!");
+        console.log(note);
+    });
 }
 
 function loadNote(noteID, callback) {
